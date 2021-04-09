@@ -54,7 +54,7 @@ xtrain, xtest, ytrain, ytest =train_test_split(x,y, test_size=0.3)
 
 #autoencoders
 input_dim = xtrain.shape[1]
-encoding_dim = 14
+encoding_dim = 9
 input_layer = Input(shape=(input_dim, ))
 encoder = Dense(encoding_dim, activation="tanh", 
                 activity_regularizer=regularizers.l1(10e-5))(input_layer)
@@ -73,10 +73,7 @@ autoencoder.compile(optimizer='adam',
 checkpointer = ModelCheckpoint(filepath="model.h5",
                                verbose=0,
                                save_best_only=True)
-tensorboard = TensorBoard(log_dir='./logs',
-                          histogram_freq=0,
-                          write_graph=True,
-                          write_images=True)
+tensorboard = TensorBoard(log_dir='./logs',histogram_freq=0,write_graph=True,write_images=True)
 history = autoencoder.fit(xtrain, xtrain,
                     epochs=nb_epoch,
                     batch_size=batch_size,
@@ -84,3 +81,19 @@ history = autoencoder.fit(xtrain, xtrain,
                     validation_data=(xtest, xtest),
                     verbose=1,
                     callbacks=[checkpointer, tensorboard]).history
+
+"""
+autoencoder = load_model('model.h5')
+
+predictions = autoencoder.predict(xtest)
+mse = np.mean(np.power(xtest - predictions, 2), axis=1)
+error_df = pd.DataFrame({'reconstruction_error': mse,'true_class': ytest})
+
+print(error_df.describe())
+"""
+
+y_pred = autoencoder.predict(xtest)
+y_pred = (y_pred > 0.5)
+score = autoencoder.evaluate(xtest, ytest)
+print(score)
+    
