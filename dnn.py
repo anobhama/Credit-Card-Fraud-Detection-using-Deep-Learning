@@ -4,6 +4,13 @@ import keras
 
 data = pd.read_csv("sampleData.csv")
 data.head()
+
+data= data.dropna()
+
+#print(data.tail())
+
+print(data.isnull().sum())
+
 from sklearn.preprocessing import StandardScaler
 data["normalizedAmount"] = StandardScaler().fit_transform(data["Amount"].values.reshape(-1,1))
 data = data.drop(['Amount'], axis=1)
@@ -44,7 +51,7 @@ model = Sequential([
 ])
 model.summary()
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-model.fit(X_train, y_train, batch_size=15, epochs=5)
+model.fit(X_train, y_train, batch_size=35, epochs=100)
 score = model.evaluate(X_test, y_test)
 
 print(score)
@@ -88,11 +95,13 @@ def plot_confusion_matrix(cm, classes,
     plt.xlabel('Predicted label')
     plt.tight_layout()
    """
+
 y_pred = model.predict(X_test)
 y_test = pd.DataFrame(y_test)
 print(y_pred)
 print(y_test)
 
+"""
 from sklearn.metrics import accuracy_score,confusion_matrix
 
 com_decision = confusion_matrix(y_test, y_pred)
@@ -102,3 +111,4 @@ print("Accuracy_Decison    : ", Accuracy_Model)
 
 #cnf_matrix = confusion_matrix(y_test, y_preound())
 #print(cnf_matrix)
+"""
