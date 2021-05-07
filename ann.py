@@ -67,12 +67,36 @@ y_pred = classifier.predict(xtest)
 y_pred = (y_pred > 0.5)
 score = classifier.evaluate(xtest, ytest)
 print(score)
+
+from sklearn.metrics import confusion_matrix
+
+cnf_model=confusion_matrix(ytest,y_pred)
+print(cnf_model)  #TN #FP #FN #TP
+
+#finding correlation between columns and plotting heatmap
+
+corrmat = data.corr() 
+fig = plt.figure(figsize = (12, 9)) 
+sns.heatmap(corrmat, vmax = .8, square = True) 
+plt.show()
+
+
+LABELS = ['Normal', 'Fraud'] 
+conf_matrix = confusion_matrix(ytest,y_pred) 
+plt.figure(figsize =(12, 12)) 
+sns.heatmap(conf_matrix, xticklabels = LABELS,  
+            yticklabels = LABELS, annot = True, fmt ="d"); 
+plt.title("Confusion matrix") 
+plt.ylabel('True class') 
+plt.xlabel('Predicted class') 
+plt.show()
+
 """
 from sklearn.metrics import accuracy_score,confusion_matrix,classification_report
 
 acc1=accuracy_score(ytest,y_pred)
 print(' accuracy score:',acc1)
-"""
+
 
 a = float(input("REGION_RATING_CLIENT_W_CITY : "))
 b= float(input("REG_CITY_NOT_WORK_CITY "))
@@ -87,3 +111,4 @@ j= float(input("Amount: "))
 result = classifier.predict([[a,b,c,d,e,f,h,i,j]])  # input must be 2D array
 
 print(result)
+"""
